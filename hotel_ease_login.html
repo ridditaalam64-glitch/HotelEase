@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Ease Login</title>
+</head>
+<body>
+    <section id="welcome">
+        <h1>Welcome to Hotel Ease</h1>
+        <p>Please select your account type to log in.</p>
+        <label for="accountType">Account Type:</label>
+        <select id="accountType">
+            <option value="guest">Guest Login</option>
+            <option value="member">Member Login</option>
+        </select>
+        <br><br>
+        <button type="button" onclick="openLogin()">Sign In</button>
+        <p>Don't have an account? <a href="#register" onclick="showPage('register'); return false;">Register here</a></p>
+    </section>
+
+    <section id="guest" hidden>
+        <h1>Guest Login</h1>
+        <p>Sign in to browse and book rooms.</p>
+        <form id="guestForm">
+            <label for="guestEmail">Email Address:</label>
+            <input type="email" id="guestEmail" value="soumyanakarmi@gmail.com" autocomplete="username" required>
+            <br><br>
+            <label for="guestPassword">Password:</label>
+            <input type="password" id="guestPassword" autocomplete="current-password" required>
+            <br><br>
+            <button type="submit">Login</button>
+        </form>
+        <p><a href="#" onclick="resetNotice(); return false;">Forgot password?</a></p>
+        <p>Don't have an account? <a href="#register" onclick="showPage('register'); return false;">Register here</a></p>
+        <button type="button" onclick="showPage('welcome')">Back</button>
+    </section>
+
+    <section id="member" hidden>
+        <h1>Member Login</h1>
+        <p>Staff and admin access to manage bookings.</p>
+        <form id="memberForm">
+            <label for="employeeId">Employee ID:</label>
+            <input type="text" id="employeeId" value="HE-EMP-0142" autocomplete="username" required>
+            <br><br>
+            <label for="memberPassword">Password:</label>
+            <input type="password" id="memberPassword" autocomplete="current-password" required>
+            <br><br>
+            <button type="submit">Login</button>
+        </form>
+        <p><a href="#" onclick="resetNotice(); return false;">Forgot password?</a></p>
+        <p>Staff access only — contact admin for an ID.</p>
+        <button type="button" onclick="showPage('welcome')">Back</button>
+    </section>
+
+    <section id="register" hidden>
+        <h1>Create Your Account</h1>
+        <form id="registerForm">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" value="Soumya Nakarmi" autocomplete="name" required>
+            <br><br>
+            <label for="registerEmail">Email Address:</label>
+            <input type="email" id="registerEmail" value="soumyanakarmi@gmail.com" autocomplete="email" required>
+            <br><br>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" value="+977 98-1234-5678" autocomplete="tel" required>
+            <br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" autocomplete="new-password" minlength="8" required>
+            <br><br>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" autocomplete="new-password" minlength="8" required>
+            <br><br>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="#guest" onclick="showPage('guest'); return false;">Login here</a></p>
+        <button type="button" onclick="showPage('welcome')">Back</button>
+    </section>
+
+    <p id="result" role="status" aria-live="polite"></p>
+    <hr>
+    <p><small>Frontend demonstration only. No real login or account creation. Please do not enter a real password.</small></p>
+
+    <script>
+        function showPage(page) {
+            const pages = ['welcome', 'guest', 'member', 'register'];
+            for (const name of pages) {
+                document.getElementById(name).hidden = name !== page;
+            }
+            document.getElementById('result').textContent = '';
+        }
+
+        function openLogin() {
+            showPage(document.getElementById('accountType').value);
+        }
+
+        function resetNotice() {
+            document.getElementById('result').textContent =
+                'Demo only: password reset is not connected to a backend.';
+        }
+
+        document.getElementById('guestForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('guestEmail').value;
+            document.getElementById('result').textContent =
+                'Guest login form submitted for ' + email + '. Demo only — not authenticated.';
+            document.getElementById('guestPassword').value = '';
+        });
+
+        document.getElementById('memberForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const employeeId = document.getElementById('employeeId').value;
+            document.getElementById('result').textContent =
+                'Member login form submitted for Employee ID: ' + employeeId + '. Demo only — not authenticated.';
+            document.getElementById('memberPassword').value = '';
+        });
+
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+
+        function checkPasswords() {
+            confirmPassword.setCustomValidity(
+                password.value !== confirmPassword.value ? 'Passwords must match.' : ''
+            );
+        }
+        password.addEventListener('input', checkPasswords);
+        confirmPassword.addEventListener('input', checkPasswords);
+
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            checkPasswords();
+            if (!this.reportValidity()) return;
+            const name = document.getElementById('fullName').value;
+            document.getElementById('guestEmail').value = document.getElementById('registerEmail').value;
+            password.value = '';
+            confirmPassword.value = '';
+            showPage('guest');
+            document.getElementById('result').textContent =
+                'Registration form submitted for ' + name + '. Demo only — no account has been created or saved.';
+        });
+    </script>
+</body>
+</html>
